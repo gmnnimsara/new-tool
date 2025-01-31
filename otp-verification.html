@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WhatsApp OTP Verification</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 400px; 
+            margin: auto; 
+            padding: 20px; 
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        input, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button { 
+            width: 100%; 
+            padding: 10px; 
+            background-color: #25D366; 
+            color: white; 
+            border: none; 
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #128C7E;
+        }
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>WhatsApp OTP Verification</h2>
+        
+        <div id="phoneSection">
+            <input type="tel" id="phoneNumber" placeholder="Enter WhatsApp Number (+94XXXXXXXXX)" required>
+            <textarea id="customMessage" placeholder="Enter your custom message" rows="3"></textarea>
+            <button onclick="sendOTP()">Send OTP</button>
+        </div>
+
+        <div id="otpSection" style="display:none;">
+            <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6">
+            <button onclick="verifyOTP()">Verify OTP</button>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        let generatedOTP = '';
+        let phoneNumber = '';
+
+        function sendOTP() {
+            phoneNumber = document.getElementById('phoneNumber').value;
+            const customMessage = document.getElementById('customMessage').value;
+            
+            // Validate Sri Lankan phone number
+            if (!/^(\+94)[0-9]{9}$/.test(phoneNumber)) {
+                showMessage('Invalid phone number format!', 'error');
+                return;
+            }
+
+            // Generate 6-digit OTP
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            // Combine message with OTP
+            const fullMessage = `${customMessage}\n\nYour OTP: ${generatedOTP}`;
+            
+            // Simulate WhatsApp message sending
+            console.log(`Sending to ${phoneNumber}:\n${fullMessage}`);
+            
+            // Switch to OTP verification
+            document.getElementById('phoneSection').style.display = 'none';
+            document.getElementById('otpSection').style.display = 'block';
+            showMessage(`OTP sent to ${phoneNumber}`, 'success');
+        }
+
+        function verifyOTP() {
+            const userInput = document.getElementById('otpInput').value;
+            
+            if (userInput === generatedOTP) {
+                showMessage('OTP Verified Successfully!', 'success');
+                // Add your post-verification logic here
+            } else {
+                showMessage('Incorrect OTP', 'error');
+            }
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = type;
+        }
+    </script>
+</body>
+</html>
